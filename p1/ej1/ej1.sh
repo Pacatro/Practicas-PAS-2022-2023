@@ -26,10 +26,7 @@ if [ -d $ruta_dir ]; then
     fi
 fi
 
-echo "Creando directorio"
 mkdir $ruta_dir
-
-echo "Moviendo a directorio"
 cd $ruta_dir
 
 for i in $(seq $n_dir); do
@@ -44,3 +41,5 @@ for i in $(seq $n_dir); do
 
     cd ..
 done
+
+echo "Directorios creados"
