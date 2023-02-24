@@ -1,0 +1,2 @@
+LISTA=`ls`
+echo $LISTA
