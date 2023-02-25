@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ $# == 0 ]; then
-    echo "Argumentos incorrectos. Uso: ./ej2.sh <ruta_directorio>"
+    echo -e "Argumentos incorrectos.\nUso: ./ej2.sh <ruta_directorio>"
     exit
 fi
 
@@ -10,7 +10,7 @@ cd $ruta_dir
 
 echo -e "Cambiando permisos directorios: $ruta_dir"
 
-for dirs in $(ls); do
+for dirs in $(ls -d */); do
     echo -e "\nCambiando permisos directorios: $dirs\n"
     chmod u+rwx,g+x,o-rwx $dirs
     cd $dirs
@@ -28,7 +28,10 @@ for dirs in $(ls); do
     cd ..
 done
 
-#TODO: Terminar parte users
-for users in $(who); do
-    echo $users
-done
+cd ..
+
+who > logged.txt | uniq logged.txt | who > /dev/null
+
+echo -e "\nUsuarios logueados en este momento:"
+
+echo $(cat logged.txt)
