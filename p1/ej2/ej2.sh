@@ -6,7 +6,7 @@ getUsers(){
 
     echo -e "Usuarios logueados en este momento:"
     echo $(cat logged.txt)
-    rm -r logged.txt
+    rm logged.txt
 }
 
 shFiles(){

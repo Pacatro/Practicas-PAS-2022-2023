@@ -5,7 +5,7 @@ if [ $# == 0 ]; then
 fi
 
 randName(){
-    let length=($RANDOM%max+1)+min
+    let length=($RANDOM%max-min+1)+min
     echo `tr -dc A-Za-z0-9 < /dev/urandom | head -c $length`
 }
 
@@ -23,6 +23,7 @@ if [ -d $ruta_dir ]; then
         echo "Directorio borrado"
     else
         echo "El directorio no se ha borrado"
+        exit
     fi
 fi
 
