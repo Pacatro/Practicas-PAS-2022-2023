@@ -9,20 +9,6 @@ getUsers(){
     rm logged.txt
 }
 
-shFiles(){
-    for files_sh in $(find -name "*.sh"); do
-        echo -e "Cambiando permisos ficheros .sh: $files_sh\n"
-        chmod u+x $files_sh
-    done
-}
-
-keyFiles(){
-    for files_key in $(find -name "*.key"); do
-        echo -e "Cambiando permisos ficheros .key: $files_key\n"
-        chmod u+rwx,g-rwx,o-rwx $files_key
-    done
-}
-
 if [ $# == 0 ]; then
     echo -e "Argumentos incorrectos.\nUso: ./ej2.sh <ruta_directorio>"
     exit
@@ -40,12 +26,15 @@ for dirs in $(ls -d */); do
     chmod u+rwx,g+x,o-rwx $dirs
     cd $dirs
 
-    echo $(shFiles)
-    echo $(keyFiles)
+    echo -e "Cambiando permisos ficheros .sh..."
+    chmod u+x *.sh
+
+    echo -e "Cambiando permisos ficheros .key...\n"
+    chmod u+rwx,g-rwx,o-rwx *.key
 
     cd ..
 done
 
 cd ..
 
-echo -e "\n$(getUsers)"
+echo -e "$(getUsers)"
