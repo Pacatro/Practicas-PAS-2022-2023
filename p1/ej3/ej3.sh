@@ -25,9 +25,6 @@ if !([ -d $dir_destino ]); then
     mkdir $dir_destino
 fi
 
-#TODO: HACER OTRA CARPETA DENTRO DE COPIA Y GUARDAR
-        #LOS COMPRIMIDOS AHI
-
 cd $dir_destino
 tar cvzf $nombre_copia "../"$dir_origen > /dev/null
 echo -e "\nCopia realizada en $dir_destino/$nombre_copia"
