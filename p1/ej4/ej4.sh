@@ -1,12 +1,16 @@
 #!/bin/bash
 listarFicheros(){
     for files in $(find $dir -type f -name "*.$ext"); do
-        echo -e "$(basename $files)\t$(grep -o '.' $files | wc -l)\t$(grep -o $char $files | wc -l)" >> files.txt  
+        echo -e "\t$(basename $files)\t\t$(grep -o '.' $files | wc -l)\t\t$(grep -o $char $files | wc -l)" >> files.txt  
     done
+
+    nl files.txt
+    rm files.txt
 }
 
 if [ $# != 2 ]; then
     echo -e "Argumentos incorrectos.\nUso: ./ejercicio4.sh <ruta_directorio> <extension_fichero>"
+    exit
 fi
 
 dir=$1
@@ -17,5 +21,3 @@ read char
 
 echo -e "\nFicheros:"
 listarFicheros $char
-nl files.txt
-rm files.txt
