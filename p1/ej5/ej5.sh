@@ -8,8 +8,8 @@ listar(){
             fecha=$(stat -c %w $file)
             bytes=$(stat -c %s $file)
             permisos=$(echo $(ls -la $file) | cut -d ' ' -f1)
-            let esX=0
             
+            let esX=0
             if [ -x $file ]; then
                 esX=1
             fi
