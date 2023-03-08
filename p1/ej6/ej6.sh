@@ -19,6 +19,7 @@ crear_usuario(){
     mover_archivos $user
 
     echo $user >> users.txt
+    echo -e "Se ha creado el usuario $user."
 }
 
 if [ $# != 1 ]; then

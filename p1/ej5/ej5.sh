@@ -14,7 +14,7 @@ listar(){
                 esX=1
             fi
 
-            echo -e "$name; $fecha; $bytes; $permisos; $esX\n"
+            echo -e "$name; $fecha; $bytes; $permisos; $esX\n" 
         fi
     done
 }

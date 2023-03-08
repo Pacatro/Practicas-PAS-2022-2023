@@ -1,11 +1,14 @@
 #!/bin/bash
 listarFicheros(){
     for files in $(find $dir -type f -name "*.$ext"); do
-        echo -e "\t$(basename $files)\t\t$(grep -o '.' $files | wc -l)\t\t$(grep -o $char $files | wc -l)" >> files.txt  
+        name=$(basename $files)
+        echo $name > nomfile
+        echo -e "\t$(basename $files)\t\t${#name}\t\t$(grep -o $char nomfile | wc -l)" >> files.txt 
     done
 
     nl files.txt
     rm files.txt
+    rm nomfile
 }
 
 if [ $# != 2 ]; then
