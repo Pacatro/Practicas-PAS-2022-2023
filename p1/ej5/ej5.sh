@@ -1,9 +1,8 @@
 #!/bin/bash
 listar(){
-    cd $dir
     echo -e "Nombre; Fecha creación; Tamaño; Permisos; Ejecutable:\n"
-    for file in $(ls); do
-        if [ $(stat -c %s $file) -ge $tam_bytes ]; then
+    for file in $(find $dir -size "+"$tam_bytes"c" | sort -t":" -k3n); do
+        if !([ -d $file ]); then
             name=$(basename $file)
             fecha=$(stat -c %w $file)
             bytes=$(stat -c %s $file)
@@ -14,7 +13,9 @@ listar(){
                 esX=1
             fi
 
-            echo -e "$name; $fecha; $bytes; $permisos; $esX\n" 
+            echo -e "$name; $fecha; $bytes; $permisos; $esX\n" >> file
+            cat file | sort -t";" -k3n
+            rm file
         fi
     done
 }
