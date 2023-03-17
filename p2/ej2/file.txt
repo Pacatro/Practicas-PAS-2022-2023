@@ -1,0 +1,10 @@
+rtt min/avg/max/mdev = 18.736/18.736/18.736/0.000 ms
+rtt min/avg/max/mdev = 20.021/20.021/20.021/0.000 ms
+rtt min/avg/max/mdev = 41.067/41.067/41.067/0.000 ms
+rtt min/avg/max/mdev = 40.617/40.617/40.617/0.000 ms
+rtt min/avg/max/mdev = 40.663/40.663/40.663/0.000 ms
+rtt min/avg/max/mdev = 42.012/42.012/42.012/0.000 ms
+rtt min/avg/max/mdev = 40.250/40.250/40.250/0.000 ms
+rtt min/avg/max/mdev = 40.329/40.329/40.329/0.000 ms
+rtt min/avg/max/mdev = 47.841/47.841/47.841/0.000 ms
+rtt min/avg/max/mdev = 121.408/121.408/121.408/0.000 ms
