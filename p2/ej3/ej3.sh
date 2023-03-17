@@ -7,6 +7,7 @@ fi
 file=$1
 
 echo -e "#\tCount\t\tWord"
-grep -wo '[[:alpha:]]*' $file | sort -u | tr '[:upper:]' '[:lower:]' | uniq > file
-nl file
-rm file
+
+echo -e $(grep -wo '[[:alpha:]]*' $file | sort -u | tr '[:upper:]' '[:lower:]' | uniq > words)
+nl words
+rm words
