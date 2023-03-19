@@ -1,10 +1,9 @@
 #!/bin/bash
-
 echo -e "1. Usuarios que pertenezcan a un grupo con GID igual a 46:"
 echo -e "$(cat /etc/passwd | grep '\:46\:')\n"
 
 echo -e "2) Usuarios cuyo nombre empiece y acabe con la misma letra:"
-echo -e "NI IDEA :(\n"
+echo -e "$(cat /etc/passwd | grep -o '^[^:]*' | grep -E '^[a-z]$|^([a-z]).*\1$')\n"
 
 echo -e "3) Usuarios cuyo nombre no contenga la letra a/A:"
 echo -e "$(cat /etc/passwd | grep -v '^[^:]*[aA]')\n"
