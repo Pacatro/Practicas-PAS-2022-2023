@@ -48,12 +48,21 @@ int main(int argc, char **argv){
             break;
 
             case '?':
-                if (optopt == 'u' || optopt == 'g')
-                    fprintf (stderr, "La opción %c requiere un argumento.\n", optopt);
+                hflag = true;
             break;
 
             default: abort();
         }
+    }
+
+    if(((uvalue != NULL || gvalue != NULL) && aflag) || (uvalue != NULL && sflag) || (uvalue != NULL && gvalue != NULL)){
+        fprintf(stderr, "Incompatible options.\n");
+        hflag = true;
+    }
+    
+    if(sflag && mflag){
+        fprintf(stderr, "The --maingroup option only can be use with --user or --active.\n");
+        hflag = true;
     }
 
     if(uvalue == NULL && gvalue == NULL && !aflag && !mflag && !sflag && !hflag){
@@ -61,23 +70,13 @@ int main(int argc, char **argv){
         
         if(lgn == NULL || lgn == ""){
             fprintf(stderr, "Failed to get user information.\n");
-            exit(-1);
+            hflag = true;
         }
 
         printf("User info:\n");
         printUserInfo(lgn);
         printf("\nGroup info:\n");
         printGroupInfo(lgn);
-    }
-
-    if(uvalue != NULL && gvalue != NULL){
-        fprintf(stderr, "Incompatible options.\n");
-        exit(-1);
-    }
-
-    if((uvalue != NULL || gvalue != NULL) && aflag){
-        fprintf(stderr, "Incompatible options.\n");
-        exit(-1);
     }
 
     if(uvalue != NULL && !mflag){
@@ -99,6 +98,10 @@ int main(int argc, char **argv){
         printUserInfo(lgn);
     } 
     
+    if(mflag && uvalue != NULL){
+        printGroupInfo(uvalue);
+    }
+    
     if(mflag && aflag){
         char *lgn = getenv("USER");
         
@@ -110,12 +113,13 @@ int main(int argc, char **argv){
         printGroupInfo(lgn);
     }
 
-    if(mflag && (uvalue != NULL)){
-        printGroupInfo(uvalue);
-    }
-
     if(sflag){
         printAllGroupsInfo();
+    }
+
+    if(hflag){
+        printHelp();
+        return 0;
     }
     
     return 0;

@@ -49,7 +49,7 @@ void printGroupInfo(char *lgn){
     
     printf("Member list:\n");
     for(int i = 0; gr->gr_mem[i] != NULL; i++)
-        printf("%s\n", gr->gr_mem[i]);
+        printf(" - %s\n", gr->gr_mem[i]);
     
 }
 
@@ -76,4 +76,14 @@ void printAllGroupsInfo(){
     }
 
     fclose(file);
+}
+
+void printHelp(){
+    printf("Options:\n");
+    printf("-h, --help\t\t\tShow this help\n");
+    printf("-u, --user (<name>|<uid>)\tGet user information\n");
+    printf("-a, --active\t\t\tGet information about actual user\n");
+    printf("-m, --maingroup\t\t\tIn addition to user information, print the information of their primary group\n");
+    printf("-g, --group (<name>|<gid>)\tGet group information\n");
+    printf("-s, --allgroup\t\t\tGet information about all the groups in the system\n");
 }

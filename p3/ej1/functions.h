@@ -14,5 +14,6 @@
     void printUserInfo(char *lgn);
     void printGroupInfo(char *lgn);
     void printAllGroupsInfo();
+    void printHelp();
 
 #endif
