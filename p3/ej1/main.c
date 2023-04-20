@@ -61,7 +61,7 @@ int main(int argc, char **argv){
         
         if(lgn == NULL || lgn == ""){
             fprintf(stderr, "Failed to get user information.\n");
-            exit(1);
+            exit(-1);
         }
 
         printf("User info:\n");
@@ -72,12 +72,12 @@ int main(int argc, char **argv){
 
     if(uvalue != NULL && gvalue != NULL){
         fprintf(stderr, "Incompatible options.\n");
-        exit(1);
+        exit(-1);
     }
 
     if((uvalue != NULL || gvalue != NULL) && aflag){
         fprintf(stderr, "Incompatible options.\n");
-        exit(1);
+        exit(-1);
     }
 
     if(uvalue != NULL && !mflag){
@@ -93,7 +93,7 @@ int main(int argc, char **argv){
         
         if(lgn == NULL || lgn == ""){
             fprintf(stderr, "Failed to get user information.\n");
-            exit(1);
+            exit(-1);
         }
 
         printUserInfo(lgn);
@@ -104,7 +104,7 @@ int main(int argc, char **argv){
         
         if(lgn == NULL){
             fprintf(stderr, "Failed to get group information.\n");
-            exit(1);
+            exit(-1);
         }
 
         printGroupInfo(lgn);
