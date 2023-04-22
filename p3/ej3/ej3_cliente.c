@@ -1,12 +1,12 @@
 #include "ej3_common.h"
 
 void funcionLog(char *);
+void exitChat(int signal, char resBuffer[MAX_SIZE]);
 FILE *fLog = NULL;
+mqd_t mq_req;
+mqd_t mq_res;
 
 int main(int argc, char **argv){
-    mqd_t mq_req;
-    mqd_t mq_res;
-
     int stop = 0;
 
     char reqBuffer[MAX_SIZE];
@@ -45,9 +45,25 @@ int main(int argc, char **argv){
     sprintf(msgbuff, "[CLIENT]: Writing messages to the server (write \"%s\" to stop):\n", STOP_MSG);
     funcionLog(msgbuff);
 
+    if(signal(SIGTERM, exitChat) == SIG_ERR){
+        perror("SIGTERM error");
+        funcionLog("SIGTERM error");
+        exit(-1);
+    }
+
+    if(signal(SIGINT, exitChat) == SIG_ERR){
+        perror("SIGINT error");
+        funcionLog("SIGINT error");
+        exit(-1);
+    }
+
+
     do {
         printf("> ");
         fgets(reqBuffer, MAX_SIZE, stdin);
+
+        if(strncmp(reqBuffer, STOP_MSG, strlen(STOP_MSG)) == 0)
+            exitChat(0, resBuffer);
 
         if(mq_send(mq_req, reqBuffer, MAX_SIZE, 0) != 0){
             perror("Can't send request");
@@ -55,47 +71,31 @@ int main(int argc, char **argv){
             exit(-1);
         }
 
-        if(strncmp(reqBuffer, STOP_MSG, strlen(STOP_MSG)) == 0){    
-            stop = 1;
-        } else {
-            mq_res = mq_open(resQueue, O_CREAT | O_RDONLY, 0644, &attr);
+        mq_res = mq_open(resQueue, O_CREAT | O_RDONLY, 0644, &attr);
 
-            if(mq_res == (mqd_t)-1){
-                perror("Can't open server respond queue");
-                funcionLog("Can't open server respond queue");
-                exit(-1);
-            }
-
-            ssize_t bytes_read;
-
-            bytes_read = mq_receive(mq_res, resBuffer, MAX_SIZE, NULL);
-
-            if(bytes_read < 0){
-                perror("Can't recibe respond");
-                funcionLog("Can't recibe respond");
-                exit(-1);
-            }
-
-            resBuffer[bytes_read] = '\0';
-
-            printf("[SERVER]: Number of characters received: %d\n", (int) *resBuffer);
-            sprintf(msgbuff, "[SERVER]: Number of characters received: %d\n", (int) *resBuffer);
-            funcionLog(msgbuff);
+        if(mq_res == (mqd_t)-1){
+            perror("Can't open server respond queue");
+            funcionLog("Can't open server respond queue");
+            exit(-1);
         }
 
+        ssize_t bytes_read;
+
+        bytes_read = mq_receive(mq_res, resBuffer, MAX_SIZE, NULL);
+
+        if(bytes_read < 0){
+            perror("Can't recibe respond");
+            funcionLog("Can't recibe respond");
+            exit(-1);
+        }
+
+        resBuffer[bytes_read] = '\0';
+
+        printf("[SERVER]: Number of characters received: %d\n", (int) *resBuffer);
+        sprintf(msgbuff, "[SERVER]: Number of characters received: %d\n", (int) *resBuffer);
+        funcionLog(msgbuff);
+
     } while (!stop);
-
-    if(mq_close(mq_req) == (mqd_t)-1){
-        perror("Can't close server queue");
-        funcionLog("Can't close server queue");
-        exit(-1);
-    }
-
-    if(mq_close(mq_res) == (mqd_t)-1){
-        perror("Can't close request queue");
-        funcionLog("Can't close request queue");
-        exit(-1);
-    }
 
     return 0;
 }
@@ -131,4 +131,38 @@ void funcionLog(char *mensaje) {
 
     fclose(fLog);
     fLog = NULL;
+}
+
+void exitChat(int signal, char resBuffer[MAX_SIZE]){
+    char msgbuff[200];
+
+    sprintf(msgbuff, "[CLIENT]: Signal received: %d\n", signal);
+    funcionLog(msgbuff);
+
+    sprintf(msgbuff, "%s\n", STOP_MSG);
+
+    printf("MESSAGE: %s", msgbuff);
+
+    if(mq_send(mq_req, msgbuff, MAX_SIZE, 0) != 0){
+        perror("Can't send exit message");
+        funcionLog("Can't send exit message");
+        exit(-1);
+    }
+
+    funcionLog("[CLIENT]: Stop message sent to server\n");
+
+    if(mq_close(mq_res) == (mqd_t)-1){
+        perror("Can't close request queue");
+        funcionLog("Can't close request queue");
+        exit(-1);
+    }
+
+    if(mq_close(mq_req) == (mqd_t)-1){
+        perror("Can't close server queue");
+        funcionLog("Can't close server queue");
+        exit(-1);
+    }
+
+    if(fLog != NULL)
+        fclose(fLog);
 }

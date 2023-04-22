@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <errno.h>
 #include <time.h>
+#include <signal.h>
 
 #define REQ_QUEUE "/req_queue"
 #define RES_QUEUE "/res_queue"
