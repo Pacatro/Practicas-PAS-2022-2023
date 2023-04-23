@@ -1,13 +1,12 @@
 #include "ej3_common.h"
 
 void funcionLog(char *);
-void exitChat(int signal, char resBuffer[MAX_SIZE]);
+void exitChat(int signal);
 FILE *fLog = NULL;
-mqd_t mq_req;
-mqd_t mq_res;
+mqd_t mq_req; //Client queue
+mqd_t mq_res; //Server queue
 
 int main(int argc, char **argv){
-    int stop = 0;
 
     char reqBuffer[MAX_SIZE];
     char resBuffer[MAX_SIZE];
@@ -57,13 +56,9 @@ int main(int argc, char **argv){
         exit(-1);
     }
 
-
     do {
         printf("> ");
         fgets(reqBuffer, MAX_SIZE, stdin);
-
-        if(strncmp(reqBuffer, STOP_MSG, strlen(STOP_MSG)) == 0)
-            exitChat(0, resBuffer);
 
         if(mq_send(mq_req, reqBuffer, MAX_SIZE, 0) != 0){
             perror("Can't send request");
@@ -94,8 +89,10 @@ int main(int argc, char **argv){
         printf("[SERVER]: Number of characters received: %d\n", (int) *resBuffer);
         sprintf(msgbuff, "[SERVER]: Number of characters received: %d\n", (int) *resBuffer);
         funcionLog(msgbuff);
+    
 
-    } while (!stop);
+    } while (strncmp(resBuffer, STOP_MSG, strlen(STOP_MSG)) &&
+             strncmp(reqBuffer, STOP_MSG, strlen(STOP_MSG)));
 
     return 0;
 }
@@ -133,23 +130,25 @@ void funcionLog(char *mensaje) {
     fLog = NULL;
 }
 
-void exitChat(int signal, char resBuffer[MAX_SIZE]){
+void exitChat(int signal){
     char msgbuff[200];
+
+    printf("\n[CLIENT]: Signal received: %d\n", signal);
 
     sprintf(msgbuff, "[CLIENT]: Signal received: %d\n", signal);
     funcionLog(msgbuff);
 
     sprintf(msgbuff, "%s\n", STOP_MSG);
 
-    printf("MESSAGE: %s", msgbuff);
+    printf("\n[CLIENT]: Stop message sent to server\n");
 
+    funcionLog("\n[CLIENT]: Stop message sent to server\n");
+    
     if(mq_send(mq_req, msgbuff, MAX_SIZE, 0) != 0){
         perror("Can't send exit message");
         funcionLog("Can't send exit message");
         exit(-1);
     }
-
-    funcionLog("[CLIENT]: Stop message sent to server\n");
 
     if(mq_close(mq_res) == (mqd_t)-1){
         perror("Can't close request queue");
@@ -165,4 +164,6 @@ void exitChat(int signal, char resBuffer[MAX_SIZE]){
 
     if(fLog != NULL)
         fclose(fLog);
+
+    exit(1);
 }

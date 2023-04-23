@@ -4,8 +4,8 @@ void funcionLog(char *);
 FILE *fLog = NULL;
 
 int main(int argc, char **argv){
-    mqd_t mq_req;
-    mqd_t mq_res;
+    mqd_t mq_req; //Client queue
+    mqd_t mq_res; //Server queue
 
     struct mq_attr attr;
 
@@ -54,6 +54,8 @@ int main(int argc, char **argv){
         buffer[bytes_read] = '\0';
 
         if(strncmp(buffer, STOP_MSG, strlen(STOP_MSG)) == 0){
+            printf("[SERVER]: EXIT\n");
+            funcionLog("[SERVER]: EXIT\n");
             stop = 1;
         } else {
             printf("[CLIENT]: %s\n", buffer);
